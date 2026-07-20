@@ -6,3 +6,5 @@ window.APP_CONFIG = {
   SUPABASE_URL: "https://sqpktuvqpdxqsjjtufue.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_pXZ2vUuVoSk46CPMQon4EA_Vi0HFkZH"
 };
+
+
