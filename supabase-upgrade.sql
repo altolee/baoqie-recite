@@ -1,25 +1,18 @@
--- 寶篋印念誦｜Baoqie Recite 完整資料庫設定
--- 新專案可執行本檔案；既有專案建議執行 supabase-upgrade.sql。
+-- 寶篋印念誦 v2：既有 Supabase 專案升級用
+-- 執行順序：Supabase Dashboard > SQL Editor > New query > 貼上全部內容 > Run
+-- 本升級保留既有資料；舊紀錄的 email、phone 會維持空白，新紀錄開始分欄保存。
 
-create extension if not exists pgcrypto;
+begin;
 
-create table if not exists public.baoqie_recitations (
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  recited_at timestamptz not null default now(),
-  name text not null check (char_length(name) between 1 and 80),
-  count integer not null check (count between 1 and 1000000),
-  email text,
-  phone text,
-  contact_hash text not null check (char_length(contact_hash) = 64)
-);
+alter table public.baoqie_recitations
+  add column if not exists email text;
 
--- 讓既有舊版資料表也能安全升級。
-alter table public.baoqie_recitations add column if not exists email text;
-alter table public.baoqie_recitations add column if not exists phone text;
+alter table public.baoqie_recitations
+  add column if not exists phone text;
 
 alter table public.baoqie_recitations
   drop constraint if exists baoqie_recitations_email_check;
+
 alter table public.baoqie_recitations
   add constraint baoqie_recitations_email_check
   check (
@@ -33,21 +26,15 @@ alter table public.baoqie_recitations
 
 alter table public.baoqie_recitations
   drop constraint if exists baoqie_recitations_phone_check;
+
 alter table public.baoqie_recitations
   add constraint baoqie_recitations_phone_check
-  check (phone is null or phone ~ '^[0-9]{8,30}$');
+  check (
+    phone is null
+    or phone ~ '^[0-9]{8,30}$'
+  );
 
-create index if not exists baoqie_recitations_contact_hash_idx
-  on public.baoqie_recitations (contact_hash);
-
-create index if not exists baoqie_recitations_recited_at_idx
-  on public.baoqie_recitations (recited_at desc);
-
-alter table public.baoqie_recitations enable row level security;
-
-revoke all on table public.baoqie_recitations from anon, authenticated;
-grant insert on table public.baoqie_recitations to anon, authenticated;
-
+-- 公開訪客只可以新增符合格式的資料，不能直接讀取整張資料表。
 drop policy if exists "public can submit baoqie_recitations"
   on public.baoqie_recitations;
 
@@ -67,6 +54,7 @@ create policy "public can submit baoqie_recitations"
     and phone ~ '^[0-9]{8,30}$'
   );
 
+-- 本人查詢只回傳念誦紀錄，不回傳 Email 或電話。
 create or replace function public.lookup_baoqie_recitations(p_contact_hash text)
 returns table (
   id uuid,
@@ -91,6 +79,7 @@ $$;
 revoke all on function public.lookup_baoqie_recitations(text) from public;
 grant execute on function public.lookup_baoqie_recitations(text) to anon, authenticated;
 
+-- 公開首頁只取得三個整體統計數字，不會取得任何個人資料。
 create or replace function public.get_baoqie_public_stats()
 returns table (
   participant_count bigint,
@@ -103,11 +92,13 @@ set search_path = public
 stable
 as $$
   select
-    count(distinct r.contact_hash)::bigint,
-    coalesce(sum(r.count), 0)::bigint,
-    count(*)::bigint
+    count(distinct r.contact_hash)::bigint as participant_count,
+    coalesce(sum(r.count), 0)::bigint as recitation_total,
+    count(*)::bigint as record_count
   from public.baoqie_recitations r;
 $$;
 
 revoke all on function public.get_baoqie_public_stats() from public;
 grant execute on function public.get_baoqie_public_stats() to anon, authenticated;
+
+commit;

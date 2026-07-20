@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STORAGE_KEY = "sutra-recitation-records-v1";
+  const STORAGE_KEY = "sutra-recitation-records-v2";
   const config = window.APP_CONFIG || {};
   const hasCloudConfig = Boolean(config.SUPABASE_URL && config.SUPABASE_ANON_KEY && window.supabase);
   const client = hasCloudConfig
@@ -13,8 +13,9 @@
 
   const elements = {
     modeBadge: $("#mode-badge"),
-    todayTotal: $("#today-total"),
+    participantTotal: $("#participant-total"),
     allTotal: $("#all-total"),
+    recordTotal: $("#record-total"),
     recordForm: $("#record-form"),
     lookupForm: $("#lookup-form"),
     count: $("#count"),
@@ -69,8 +70,11 @@
 
   function getLocalRecords() {
     try {
-      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      return Array.isArray(parsed) ? parsed : [];
+      const current = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      if (Array.isArray(current) && current.length) return current;
+
+      const previous = JSON.parse(localStorage.getItem("sutra-recitation-records-v1") || "[]");
+      return Array.isArray(previous) ? previous : [];
     } catch {
       return [];
     }
@@ -80,20 +84,48 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
   }
 
-  function isSameLocalDay(dateA, dateB = new Date()) {
-    const a = new Date(dateA);
-    return a.getFullYear() === dateB.getFullYear()
-      && a.getMonth() === dateB.getMonth()
-      && a.getDate() === dateB.getDate();
+  function computeLocalStats(records = getLocalRecords()) {
+    const participants = new Set(records.map((item) => item.contact_hash).filter(Boolean)).size;
+    const recitationTotal = records.reduce((sum, item) => sum + Number(item.count || 0), 0);
+    return {
+      participantCount: participants,
+      recitationTotal,
+      recordCount: records.length
+    };
   }
 
-  function renderStats(records = getLocalRecords()) {
-    const all = records.reduce((sum, item) => sum + Number(item.count || 0), 0);
-    const today = records
-      .filter((item) => isSameLocalDay(item.recited_at))
-      .reduce((sum, item) => sum + Number(item.count || 0), 0);
-    elements.allTotal.textContent = all.toLocaleString("zh-TW");
-    elements.todayTotal.textContent = today.toLocaleString("zh-TW");
+  function renderStats(stats) {
+    elements.participantTotal.textContent = Number(stats.participantCount || 0).toLocaleString("zh-TW");
+    elements.allTotal.textContent = Number(stats.recitationTotal || 0).toLocaleString("zh-TW");
+    elements.recordTotal.textContent = Number(stats.recordCount || 0).toLocaleString("zh-TW");
+  }
+
+  async function fetchPublicStats() {
+    if (!hasCloudConfig) return computeLocalStats();
+
+    const { data, error } = await client.rpc("get_baoqie_public_stats");
+    if (error) throw new Error(error.message);
+
+    const row = Array.isArray(data) ? data[0] : data;
+    return {
+      participantCount: Number(row?.participant_count || 0),
+      recitationTotal: Number(row?.recitation_total || 0),
+      recordCount: Number(row?.record_count || 0)
+    };
+  }
+
+  async function refreshStats() {
+    try {
+      const stats = await fetchPublicStats();
+      renderStats(stats);
+      return stats;
+    } catch (error) {
+      console.error("Unable to load public stats:", error);
+      elements.participantTotal.textContent = "—";
+      elements.allTotal.textContent = "—";
+      elements.recordTotal.textContent = "—";
+      return null;
+    }
   }
 
   function setMessage(element, text, success = false) {
@@ -109,8 +141,10 @@
   }
 
   function validateContact(email, phone) {
-    if (!/^\S+@\S+\.\S+$/.test(normalizeEmail(email))) return "請輸入有效的 Email。";
-    if (normalizePhone(phone).length < 8) return "請輸入有效的電話號碼。";
+    const normalizedEmail = normalizeEmail(email);
+    const normalizedPhone = normalizePhone(phone);
+    if (!/^\S+@\S+\.\S+$/.test(normalizedEmail) || normalizedEmail.length > 254) return "請輸入有效的 Email。";
+    if (normalizedPhone.length < 8 || normalizedPhone.length > 30) return "請輸入有效的電話號碼。";
     return "";
   }
 
@@ -128,7 +162,6 @@
       ...payload
     });
     saveLocalRecords(records);
-    renderStats(records);
   }
 
   async function lookupRecords(hash) {
@@ -186,10 +219,10 @@
     });
   });
 
-  $$("[data-count]").forEach((button) => {
+  $$('[data-count]').forEach((button) => {
     button.addEventListener("click", () => {
       elements.count.value = button.dataset.count;
-      $$("[data-count]").forEach((item) => item.classList.toggle("selected", item === button));
+      $$('[data-count]').forEach((item) => item.classList.toggle("selected", item === button));
     });
   });
 
@@ -223,23 +256,34 @@
     setMessage(elements.recordMessage, "正在登錄…");
 
     try {
-      const hash = await contactHash(email, phone);
+      const normalizedEmail = normalizeEmail(email);
+      const normalizedPhone = normalizePhone(phone);
+      const hash = await contactHash(normalizedEmail, normalizedPhone);
+
       await submitRecord({
         name,
         count,
+        email: normalizedEmail,
+        phone: normalizedPhone,
         recited_at: new Date(recitedAt).toISOString(),
         contact_hash: hash
       });
+
+      const stats = await refreshStats();
+      const communityText = stats
+        ? `目前已有 ${stats.participantCount.toLocaleString("zh-TW")} 位參與者，共同累積 ${stats.recitationTotal.toLocaleString("zh-TW")} 遍。`
+        : "願善念增長，所願吉祥。";
+
       setMessage(elements.recordMessage, "念誦紀錄已成功登錄。", true);
-      elements.successCopy.textContent = `${name}，本次已登錄 ${count.toLocaleString("zh-TW")} 遍。願善念增長，所願吉祥。`;
+      elements.successCopy.textContent = `${name}，本次已登錄 ${count.toLocaleString("zh-TW")} 遍。${communityText}`;
       elements.dialog.hidden = false;
       elements.recordForm.reset();
       elements.count.value = 108;
       elements.recitedAt.value = toLocalDateTimeInput();
-      $$("[data-count]").forEach((item) => item.classList.toggle("selected", item.dataset.count === "108"));
+      $$('[data-count]').forEach((item) => item.classList.toggle("selected", item.dataset.count === "108"));
     } catch (error) {
       console.error(error);
-      setMessage(elements.recordMessage, "登錄失敗，請稍後再試或確認資料庫設定。");
+      setMessage(elements.recordMessage, "登錄失敗，請稍後再試或確認資料庫已完成升級。");
     } finally {
       elements.submitButton.disabled = false;
     }
@@ -284,5 +328,5 @@
   elements.recitedAt.value = toLocalDateTimeInput();
   $("[data-count='108']").classList.add("selected");
   setModeBadge();
-  renderStats();
+  void refreshStats();
 })();

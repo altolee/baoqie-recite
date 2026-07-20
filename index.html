@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2" />
 </head>
 <body>
   <div class="page-glow glow-one" aria-hidden="true"></div>
@@ -31,16 +31,20 @@
   </header>
 
   <main class="app-shell">
-    <section class="summary-card" aria-label="念誦統計">
-      <div>
-        <span>本日念誦</span>
-        <strong id="today-total">0</strong>
+    <section class="summary-card" aria-label="共同念誦統計">
+      <div class="summary-stat">
+        <span>累計參與</span>
+        <div class="summary-value"><strong id="participant-total">0</strong><small>人</small></div>
       </div>
-      <div class="divider" aria-hidden="true"></div>
-      <div>
-        <span>累積念誦</span>
-        <strong id="all-total">0</strong>
+      <div class="summary-stat">
+        <span>累計念誦</span>
+        <div class="summary-value"><strong id="all-total">0</strong><small>遍</small></div>
       </div>
+      <div class="summary-stat">
+        <span>登錄紀錄</span>
+        <div class="summary-value"><strong id="record-total">0</strong><small>筆</small></div>
+      </div>
+      <p class="summary-caption">每一次念誦，都是共同願行的一部分。</p>
     </section>
 
     <nav class="tabs" aria-label="主要功能">
@@ -78,12 +82,12 @@
 
         <label class="field">
           <span>Email</span>
-          <input id="email" name="email" type="email" autocomplete="email" placeholder="用於日後核對查詢" required />
+          <input id="email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="用於日後核對查詢" required />
         </label>
 
         <label class="field">
           <span>電話</span>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="例如：0912 345 678" required />
+          <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" placeholder="例如：0912 345 678" required />
         </label>
 
         <label class="field">
@@ -91,9 +95,14 @@
           <input id="recited-at" name="recitedAt" type="datetime-local" required />
         </label>
 
+        <details class="privacy-note">
+          <summary>個人資料使用說明</summary>
+          <p>本平台蒐集姓名或稱呼、Email、電話、念誦次數及念誦時間，用於本人紀錄查詢、整體統計、資料備份及必要聯繫。Email 與電話將分別保存於受權限保護的資料庫，不會在公開頁面顯示；系統另以不可逆識別碼核對本人查詢。</p>
+        </details>
+
         <label class="consent-row">
           <input id="consent" type="checkbox" required />
-          <span>我同意將本次念誦資料用於紀錄與本人查詢。Email 與電話會組合轉換為不可直接閱讀的識別碼，不以明文保存。</span>
+          <span>我已閱讀並同意上述資料使用方式，並了解可向平台管理者申請查詢、更正或刪除個人資料。</span>
         </label>
 
         <button id="submit-button" class="primary-button" type="submit">
@@ -114,11 +123,11 @@
       <form id="lookup-form" novalidate>
         <label class="field">
           <span>Email</span>
-          <input id="lookup-email" type="email" autocomplete="email" placeholder="登錄時使用的 Email" required />
+          <input id="lookup-email" type="email" maxlength="254" autocomplete="email" placeholder="登錄時使用的 Email" required />
         </label>
         <label class="field">
           <span>電話</span>
-          <input id="lookup-phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="登錄時使用的電話" required />
+          <input id="lookup-phone" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" placeholder="登錄時使用的電話" required />
         </label>
         <button id="lookup-button" class="secondary-button" type="submit">查詢我的紀錄</button>
         <p id="lookup-message" class="form-message" role="status" aria-live="polite"></p>
@@ -145,7 +154,7 @@
 
   <footer>
     <p>本平台僅作念誦紀錄，不代表寺院、法會或宗教團體認證。</p>
-    <p>請妥善使用個人資料；正式上線前應完成隱私權政策與管理者權限設定。</p>
+    <p>Email 與電話不會在公開頁面顯示；完整資料僅供授權管理、備份與必要聯繫使用。</p>
   </footer>
 
   <div id="success-dialog" class="dialog" hidden>
@@ -160,7 +169,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+  <script src="config.js?v=2"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>

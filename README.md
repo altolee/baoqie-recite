@@ -1,49 +1,25 @@
-# 寶篋印念誦｜Baoqie Recite
+# 寶篋印念誦｜Baoqie Recite v2
 
 「一切如來心秘密全身舍利寶篋印陀羅尼」手機優先念誦登錄平台。
 
-- 網站品牌：寶篋印念誦
-- 英文名稱：Baoqie Recite
-- GitHub：`altolee/baoqie-recite`
-- Vercel 專案：`baoqie-recite`
-- Supabase 資料表：`baoqie_recitations`
+## v2 新增功能
 
-## 主要功能
+- Email 與電話分別保存於 Supabase，方便未來授權匯出 CSV／Excel。
+- 保留 `contact_hash`，作為本人查詢與不重複參與人數的識別依據。
+- 首頁顯示：累計參與人數、累計念誦遍數、登錄紀錄筆數。
+- 公開統計函式只回傳數字，不會公開 Email、電話或個別紀錄。
+- 更新個人資料使用說明與同意文字。
 
-- 姓名或稱呼、念誦次數、念誦時間登錄
-- 7、21、49、108 遍快速選擇
-- 本日與累積念誦統計
-- 以 Email + 電話查詢本人歷史紀錄
-- Email 與電話不以明文寫入資料庫，而是組合後轉為 SHA-256 識別碼
-- 尚未連接 Supabase 時，自動切換為瀏覽器本機示範模式
+## 既有專案升級順序
 
-## 啟用 Supabase
+1. 在 Supabase SQL Editor 執行 `supabase-upgrade.sql`。
+2. 確認顯示 `Success. No rows returned`。
+3. 將網站檔案上傳到 GitHub repository `altolee/baoqie-recite`，覆蓋同名檔案。
+4. Vercel 會因 GitHub 新 commit 自動部署。
+5. 在網站新增一筆測試資料，再到 Supabase Table Editor 確認 `email`、`phone` 欄位已有值。
 
-1. 在 Supabase 建立專案，建議名稱 `baoqie-recite`。
-2. 打開 SQL Editor，執行 `supabase.sql`。
-3. 到 Project Settings / API，取得 Project URL 與 anon 或 publishable key。
-4. 編輯 `config.js`：
+## 重要說明
 
-```js
-window.APP_CONFIG = {
-  SUPABASE_URL: "https://你的專案.supabase.co",
-  SUPABASE_ANON_KEY: "你的 anon 或 publishable key"
-};
-```
-
-請勿將 `service_role` secret key 放進前端檔案。
-
-## 部署到 Vercel
-
-本專案為純靜態網站：
-
-- Framework Preset：Other
-- Build Command：留空
-- Output Directory：留空
-- Project Name：`baoqie-recite`
-
-連結 GitHub repository `altolee/baoqie-recite` 後即可部署。
-
-## 正式公開前
-
-建議補上完整隱私權政策、管理者後台、濫用防護、備份與個資事件處理流程。
+- 舊紀錄只有 `contact_hash`，無法反推出原始 Email 與電話，所以舊資料的 `email`、`phone` 會保持空白。
+- 新紀錄會保存標準化後的 Email 與電話：Email 轉小寫，電話僅保留數字。
+- `service_role`、`sb_secret_` 與資料庫密碼不可放入 GitHub 或前端檔案。
