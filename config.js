@@ -1,6 +1,8 @@
-// 正式連接 Supabase 時，請將下列兩個值替換為專案設定中的 URL 與 anon public key。
-// anon key 可以放在前端；請勿將 service_role key 放進本檔案。
+
+
+// Supabase 公開前端設定。
+// Publishable key 可用於瀏覽器；請勿把 sb_secret_、service_role 或資料庫密碼放進本檔案。
 window.APP_CONFIG = {
-  SUPABASE_URL: "",
-  SUPABASE_ANON_KEY: ""
+  SUPABASE_URL: "https://sqpktuvqpdxqsjjtufue.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_pXZ2vUuVoSk46CPMQon4EA_Vi0HFkZH"
 };
