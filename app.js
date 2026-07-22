@@ -4,6 +4,7 @@
   const STORAGE_KEY = "sutra-recitation-records-v2";
   const LANGUAGE_STORAGE_KEY = "baoqie-interface-language-v1";
   const SUPPORTED_LANGUAGES = ["zh-TW", "en", "ja"];
+  const RECORD_TYPES = ["sutra", "dharani", "title"];
   const config = window.APP_CONFIG || {};
   const hasCloudConfig = Boolean(config.SUPABASE_URL && config.SUPABASE_ANON_KEY && window.supabase);
   const client = hasCloudConfig
@@ -19,6 +20,9 @@
       titleLine1: "一切如來心秘密全身舍利",
       titleLine2: "寶篋印陀羅尼",
       heroCopy: "以恭敬心記錄每一次念誦，將清淨善念回向一切眾生。",
+      campaignAria: "活動說明",
+      campaignTitle: "［虔誦經題求加被・千經萬咒祈和平］",
+      campaignText: "誦經、持咒、誦經題活動，廣邀大家共襄盛舉。",
       modeChecking: "正在確認資料模式…",
       cloudMode: "雲端資料庫模式",
       demoMode: "公開示範模式 · 資料僅存本機",
@@ -35,9 +39,20 @@
       tabLookup: "查詢紀錄",
       recordKicker: "Record",
       recordTitle: "登錄這一次的念誦",
-      recordIntro: "請填寫基本資料與本次念誦次數。時間將自動記錄，也可自行調整。",
+      recordIntro: "請選擇記錄類型，並填寫基本資料與本次持誦次數。時間將自動記錄，也可自行調整。",
       nameLabel: "姓名或稱呼",
       namePlaceholder: "例如：李○○",
+      recordTypeLabel: "記錄類型",
+      recordTypePlaceholder: "請選擇記錄類型",
+      recordTypeSutra: "誦經：一切如來心秘密全身舍利寶篋印陀羅尼經",
+      recordTypeDharani: "持咒：一切如來心秘密全身舍利寶篋印陀羅尼",
+      recordTypeTitle: "持誦經題：一切如來心秘密全身舍利寶篋印陀羅尼經會上佛菩薩",
+      legacyRecordType: "未分類（舊紀錄）",
+      interfaceLanguageLabel: "登錄介面",
+      interfaceLanguageZh: "繁體中文",
+      interfaceLanguageEn: "English",
+      interfaceLanguageJa: "日本語",
+      legacyInterfaceLanguage: "未知介面（舊紀錄）",
       countLabel: "本次念誦次數",
       quickCountAria: "快速選擇念誦次數",
       decreaseCount: "減少一次",
@@ -48,7 +63,7 @@
       phonePlaceholder: "例如：0912 345 678",
       timeLabel: "念誦時間",
       privacySummary: "個人資料使用說明",
-      privacyText: "本平台蒐集姓名或稱呼、Email、電話、念誦次數及念誦時間，用於本人紀錄查詢、整體統計、資料備份及必要聯繫。Email 與電話將分別保存於受權限保護的資料庫，不會在公開頁面顯示；系統另以不可逆識別碼核對本人查詢。",
+      privacyText: "本平台蒐集姓名或稱呼、記錄類型、使用介面語言、Email、電話、持誦次數及持誦時間，用於本人紀錄查詢、整體統計、語言使用分析、資料備份及必要聯繫。Email 與電話將分別保存於受權限保護的資料庫，不會在公開頁面顯示；系統另以不可逆識別碼核對本人查詢。",
       consentText: "我已閱讀並同意上述資料使用方式，並了解可向平台管理者申請查詢、更正或刪除個人資料。",
       submitLabel: "登錄念誦",
       submitSubtext: "願以此功德，普及於一切",
@@ -70,6 +85,7 @@
       scriptureName: "一切如來心秘密全身舍利寶篋印陀羅尼",
       lookupBusy: "查詢中…",
       errName: "請填寫姓名或稱呼。",
+      errRecordType: "請選擇記錄類型。",
       errCount: "念誦次數需為 1 至 1,000,000 的整數。",
       errEmail: "請輸入有效的 Email。",
       errPhone: "請輸入有效的電話號碼。",
@@ -83,7 +99,7 @@
       lookupFound: "共找到 {count} 筆紀錄。",
       lookupFailed: "查詢失敗，請稍後再試或確認資料庫設定。",
       community: "目前已有 {participants} 位參與者，共同累積 {total} 遍。",
-      successCopy: "{name}，本次已登錄 {count} 遍。{community}",
+      successCopy: "{name}，本次已登錄「{type}」{count} 遍。{community}",
       auspiciousFallback: "願善念增長，所願吉祥。",
       quickCount: "{count} 遍",
       recordCountText: "{count} 遍"
@@ -96,6 +112,9 @@
       titleLine1: "Dhāraṇī of the Secret Whole-Body Relics",
       titleLine2: "of the Heart of All Tathāgatas",
       heroCopy: "Record each recitation with reverence and dedicate every wholesome aspiration to all beings.",
+      campaignAria: "Campaign information",
+      campaignTitle: "[Recite Sutra Titles with Devotion for Blessings · A Thousand Sutras and Ten Thousand Mantras for Peace]",
+      campaignText: "Everyone is warmly invited to join the sutra recitation, mantra recitation, and sutra-title recitation campaign.",
       modeChecking: "Checking data mode…",
       cloudMode: "Cloud database mode",
       demoMode: "Public demo · Data stored only on this device",
@@ -112,9 +131,20 @@
       tabLookup: "View Records",
       recordKicker: "Record",
       recordTitle: "Record this recitation",
-      recordIntro: "Enter your basic information and the number of recitations. The time is filled in automatically and can be adjusted.",
+      recordIntro: "Select a record type, then enter your basic information and recitation count. The time is filled in automatically and can be adjusted.",
       nameLabel: "Name or preferred name",
       namePlaceholder: "For example: Li",
+      recordTypeLabel: "Record type",
+      recordTypePlaceholder: "Select a record type",
+      recordTypeSutra: "Sutra: The Sutra of the Dhāraṇī of the Secret Whole-Body Relics of the Heart of All Tathāgatas",
+      recordTypeDharani: "Mantra: Dhāraṇī of the Secret Whole-Body Relics of the Heart of All Tathāgatas",
+      recordTypeTitle: "Sutra title: Buddhas and Bodhisattvas in the Assembly of the Sutra of the Dhāraṇī of the Secret Whole-Body Relics of the Heart of All Tathāgatas",
+      legacyRecordType: "Unclassified legacy record",
+      interfaceLanguageLabel: "Interface used",
+      interfaceLanguageZh: "Traditional Chinese",
+      interfaceLanguageEn: "English",
+      interfaceLanguageJa: "Japanese",
+      legacyInterfaceLanguage: "Unknown interface (legacy record)",
       countLabel: "Number of recitations",
       quickCountAria: "Quickly select a recitation count",
       decreaseCount: "Decrease by one",
@@ -125,7 +155,7 @@
       phonePlaceholder: "For example: +886 912 345 678",
       timeLabel: "Recitation time",
       privacySummary: "Personal data notice",
-      privacyText: "This platform collects your name or preferred name, email, phone number, recitation count, and recitation time for personal record lookup, overall statistics, data backup, and necessary contact. Email and phone are stored separately in an access-protected database and are never shown publicly. An irreversible identifier is also used to verify personal lookups.",
+      privacyText: "This platform collects your name or preferred name, record type, interface language, email, phone number, recitation count, and recitation time for personal record lookup, overall statistics, language-use analysis, data backup, and necessary contact. Email and phone are stored separately in an access-protected database and are never shown publicly. An irreversible identifier is also used to verify personal lookups.",
       consentText: "I have read and agree to the data use described above, and understand that I may request access, correction, or deletion from the platform administrator.",
       submitLabel: "Record Recitation",
       submitSubtext: "May this merit benefit all beings",
@@ -147,6 +177,7 @@
       scriptureName: "Dhāraṇī of the Secret Whole-Body Relics of the Heart of All Tathāgatas",
       lookupBusy: "Searching…",
       errName: "Please enter your name or preferred name.",
+      errRecordType: "Please select a record type.",
       errCount: "The recitation count must be an integer from 1 to 1,000,000.",
       errEmail: "Please enter a valid email address.",
       errPhone: "Please enter a valid phone number.",
@@ -160,7 +191,7 @@
       lookupFound: "Records found: {count}.",
       lookupFailed: "The lookup failed. Please try again later or check the database settings.",
       community: "{participants} people have participated, with {total} recitations recorded together.",
-      successCopy: "{name}, {count} recitations have been recorded. {community}",
+      successCopy: '{name}, {count} recitations of \"{type}\" have been recorded. {community}',
       auspiciousFallback: "May wholesome aspirations grow and all wishes be fulfilled.",
       quickCount: "{count} times",
       recordCountText: "{count} recitations"
@@ -173,6 +204,9 @@
       titleLine1: "一切如来心秘密全身舎利",
       titleLine2: "宝篋印陀羅尼",
       heroCopy: "一回一回の念誦を敬いの心で記録し、清らかな善念をすべての衆生に回向します。",
+      campaignAria: "活動案内",
+      campaignTitle: "［敬虔に経題を唱え加被を願う・千経万呪で平和を祈る］",
+      campaignText: "読経・持呪・経題念誦の活動に、皆さまのご参加を心よりお待ちしています。",
       modeChecking: "データモードを確認しています…",
       cloudMode: "クラウドデータベースモード",
       demoMode: "公開デモ · データはこの端末のみに保存",
@@ -189,9 +223,20 @@
       tabLookup: "記録を照会",
       recordKicker: "記録",
       recordTitle: "今回の念誦を登録",
-      recordIntro: "基本情報と今回の念誦回数を入力してください。時刻は自動入力され、変更もできます。",
+      recordIntro: "記録の種類を選び、基本情報と今回の念誦回数を入力してください。時刻は自動入力され、変更もできます。",
       nameLabel: "お名前または呼び名",
       namePlaceholder: "例：山田○○",
+      recordTypeLabel: "記録の種類",
+      recordTypePlaceholder: "記録の種類を選択してください",
+      recordTypeSutra: "読経：一切如来心秘密全身舎利宝篋印陀羅尼経",
+      recordTypeDharani: "持呪：一切如来心秘密全身舎利宝篋印陀羅尼",
+      recordTypeTitle: "経題念誦：一切如来心秘密全身舎利宝篋印陀羅尼経会上仏菩薩",
+      legacyRecordType: "未分類（旧記録）",
+      interfaceLanguageLabel: "登録時の言語",
+      interfaceLanguageZh: "繁体字中国語",
+      interfaceLanguageEn: "英語",
+      interfaceLanguageJa: "日本語",
+      legacyInterfaceLanguage: "不明（旧記録）",
       countLabel: "今回の念誦回数",
       quickCountAria: "念誦回数をすばやく選択",
       decreaseCount: "1回減らす",
@@ -202,7 +247,7 @@
       phonePlaceholder: "例：090 1234 5678",
       timeLabel: "念誦した日時",
       privacySummary: "個人情報の利用について",
-      privacyText: "本プラットフォームでは、お名前または呼び名、メールアドレス、電話番号、念誦回数、念誦日時を、ご本人の記録照会、全体統計、データのバックアップ、必要な連絡のために収集します。メールアドレスと電話番号はアクセス制限されたデータベースに別々に保存され、公開画面には表示されません。また、ご本人の照会確認には復元できない識別子を使用します。",
+      privacyText: "本プラットフォームでは、お名前または呼び名、記録の種類、使用した画面言語、メールアドレス、電話番号、念誦回数、念誦日時を、ご本人の記録照会、全体統計、言語利用の分析、データのバックアップ、必要な連絡のために収集します。メールアドレスと電話番号はアクセス制限されたデータベースに別々に保存され、公開画面には表示されません。また、ご本人の照会確認には復元できない識別子を使用します。",
       consentText: "上記のデータ利用方法を読み、同意しました。また、管理者に個人情報の照会・訂正・削除を申請できることを理解しています。",
       submitLabel: "念誦を登録",
       submitSubtext: "この功徳を、すべてのものに",
@@ -224,6 +269,7 @@
       scriptureName: "一切如来心秘密全身舎利宝篋印陀羅尼",
       lookupBusy: "照会中…",
       errName: "お名前または呼び名を入力してください。",
+      errRecordType: "記録の種類を選択してください。",
       errCount: "念誦回数は1から1,000,000までの整数で入力してください。",
       errEmail: "有効なメールアドレスを入力してください。",
       errPhone: "有効な電話番号を入力してください。",
@@ -237,7 +283,7 @@
       lookupFound: "{count}件の記録が見つかりました。",
       lookupFailed: "照会できませんでした。しばらくしてから再度お試しいただくか、データベース設定をご確認ください。",
       community: "現在{participants}人が参加し、合計{total}遍を記録しています。",
-      successCopy: "{name}さん、今回は{count}遍を記録しました。{community}",
+      successCopy: "{name}さん、今回は「{type}」を{count}遍記録しました。{community}",
       auspiciousFallback: "善き思いが育ち、願いが吉祥に結ばれますように。",
       quickCount: "{count}遍",
       recordCountText: "{count}遍"
@@ -253,6 +299,7 @@
     allTotal: $("#all-total"),
     recordTotal: $("#record-total"),
     recordForm: $("#record-form"),
+    recordType: $("#record-type"),
     lookupForm: $("#lookup-form"),
     count: $("#count"),
     recitedAt: $("#recited-at"),
@@ -602,6 +649,27 @@
     return getLocalRecords().filter((item) => item.contact_hash === hash);
   }
 
+  function recordTypeText(recordType) {
+    const keyByType = {
+      sutra: "recordTypeSutra",
+      dharani: "recordTypeDharani",
+      title: "recordTypeTitle"
+    };
+    return keyByType[recordType] ? t(keyByType[recordType]) : t("legacyRecordType");
+  }
+
+  function interfaceLanguageText(interfaceLanguage) {
+    const keyByLanguage = {
+      "zh-TW": "interfaceLanguageZh",
+      en: "interfaceLanguageEn",
+      ja: "interfaceLanguageJa"
+    };
+    const languageName = keyByLanguage[interfaceLanguage]
+      ? t(keyByLanguage[interfaceLanguage])
+      : t("legacyInterfaceLanguage");
+    return `${t("interfaceLanguageLabel")}：${languageName}`;
+  }
+
   function renderRecordList(records) {
     lastLookupRecords = [...records];
     elements.recordList.replaceChildren();
@@ -619,9 +687,12 @@
       count.textContent = t("recordCountText", { count: formatNumber(record.count) });
 
       const note = document.createElement("small");
-      note.textContent = t("scriptureName");
+      note.textContent = recordTypeText(record.record_type);
 
-      item.append(title, count, note);
+      const languageNote = document.createElement("small");
+      languageNote.textContent = interfaceLanguageText(record.interface_language);
+
+      item.append(title, count, note, languageNote);
       elements.recordList.append(item);
     });
   }
@@ -637,6 +708,7 @@
     elements.successCopy.textContent = t("successCopy", {
       name: context.name,
       count: formatNumber(context.count),
+      type: recordTypeText(context.recordType),
       community
     });
   }
@@ -688,6 +760,7 @@
     setMessage(elements.recordMessage, "");
 
     const name = $("#name").value.trim();
+    const recordType = elements.recordType.value;
     const count = Number(elements.count.value);
     const email = $("#email").value;
     const phone = $("#phone").value;
@@ -695,6 +768,7 @@
     const consent = $("#consent").checked;
 
     if (!name) return setMessage(elements.recordMessage, t("errName"));
+    if (!RECORD_TYPES.includes(recordType)) return setMessage(elements.recordMessage, t("errRecordType"));
     if (!Number.isInteger(count) || count < 1 || count > 1000000) return setMessage(elements.recordMessage, t("errCount"));
     const contactError = validateContact(email, phone);
     if (contactError) return setMessage(elements.recordMessage, contactError);
@@ -711,6 +785,8 @@
 
       await submitRecord({
         name,
+        record_type: recordType,
+        interface_language: currentLanguage,
         count,
         email: normalizedEmail,
         phone: normalizedPhone,
@@ -720,7 +796,7 @@
 
       const stats = await refreshStats();
       setMessage(elements.recordMessage, t("recordSuccess"), true);
-      renderSuccessCopy({ name, count, stats });
+      renderSuccessCopy({ name, recordType, count, stats });
       elements.dialog.hidden = false;
       elements.recordForm.reset();
       elements.count.value = 108;

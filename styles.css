@@ -26,7 +26,7 @@ body {
   font-family: "Noto Sans TC", "Noto Sans JP", system-ui, sans-serif;
   overflow-x: hidden;
 }
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 button { cursor: pointer; }
 
 .page-glow {
@@ -131,6 +131,20 @@ html[lang="en"] .hero h1 {
   color: rgba(255, 248, 232, .78);
   line-height: 1.8;
 }
+.campaign-note {
+  max-width: 620px;
+  margin: 19px auto 0;
+  padding: 15px 18px;
+  border: 1px solid rgba(234, 209, 154, .35);
+  border-radius: 18px;
+  background: rgba(255, 248, 232, .09);
+  color: #fff8e8;
+  text-align: left;
+  backdrop-filter: blur(8px);
+}
+.campaign-note strong { display: block; color: var(--gold-light); font-family: "Noto Serif TC", "Noto Serif JP", serif; font-size: .94rem; line-height: 1.65; letter-spacing: .035em; }
+.campaign-note p { margin: 5px 0 0; color: rgba(255, 248, 232, .82); font-size: .84rem; line-height: 1.75; }
+
 .mode-badge {
   display: inline-flex;
   align-items: center;
@@ -214,7 +228,7 @@ html[lang="en"] .hero h1 {
 form { display: grid; gap: 19px; }
 .field { display: grid; gap: 9px; }
 .field > span { font-size: .88rem; font-weight: 700; }
-input {
+input, select {
   width: 100%;
   min-height: 49px;
   padding: 12px 14px;
@@ -225,8 +239,11 @@ input {
   color: var(--ink);
   transition: border-color .2s, box-shadow .2s, background .2s;
 }
-input:focus { border-color: var(--gold); background: #fff; box-shadow: 0 0 0 4px rgba(200,154,66,.13); }
+input:focus, select:focus { border-color: var(--gold); background: #fff; box-shadow: 0 0 0 4px rgba(200,154,66,.13); }
 input::placeholder { color: #ac9a90; }
+select { appearance: none; padding-right: 42px; background-image: linear-gradient(45deg, transparent 50%, var(--wine) 50%), linear-gradient(135deg, var(--wine) 50%, transparent 50%); background-position: calc(100% - 19px) 21px, calc(100% - 14px) 21px; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+select:invalid { color: #9c8980; }
+select option { color: var(--ink); }
 
 .quick-counts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
 .quick-counts button {
@@ -315,6 +332,7 @@ footer p { margin: 4px 0; }
   .language-switcher button { padding-left: 10px; padding-right: 10px; }
   .hero-symbol { width: 62px; height: 62px; }
   .hero-copy { font-size: .86rem; }
+  .campaign-note { text-align: center; padding: 14px 15px; }
   .summary-card { padding-left: 5px; padding-right: 5px; }
   .summary-stat { padding-left: 5px; padding-right: 5px; }
   .summary-card span { font-size: .7rem; }
