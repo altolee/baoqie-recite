@@ -1,4 +1,4 @@
--- 寶篋印念誦 v2：既有 Supabase 專案升級用
+-- 寶篋印念誦 v3：既有 Supabase 專案升級用
 -- 執行順序：Supabase Dashboard > SQL Editor > New query > 貼上全部內容 > Run
 -- 本升級保留既有資料；舊紀錄的 email、phone 會維持空白，新紀錄開始分欄保存。
 

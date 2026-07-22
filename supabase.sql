@@ -1,4 +1,4 @@
--- 寶篋印念誦｜Baoqie Recite 完整資料庫設定
+-- 寶篋印念誦｜Baoqie Recite v3 完整資料庫設定
 -- 新專案可執行本檔案；既有專案建議執行 supabase-upgrade.sql。
 
 create extension if not exists pgcrypto;

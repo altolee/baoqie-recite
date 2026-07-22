@@ -1,48 +1,46 @@
-# 寶篋印念誦 v2 部署指引
+# 寶篋印念誦 v3 三語版部署指南
 
-## 第一階段：先升級 Supabase
+## 本次是否需要修改 Supabase？
 
-1. 登入 Supabase，進入 `baoqie-recite` 專案。
-2. 點左側 `SQL Editor`。
-3. 點 `New query`。
-4. 打開本資料夾的 `supabase-upgrade.sql`，複製全部內容貼入。
-5. 點 `Run`。
-6. 成功時會看到 `Success. No rows returned`。
+- 已經完成 v2 資料庫升級：不需要再次執行 SQL。
+- 尚未新增 `email`、`phone` 欄位與首頁統計函式：先在 Supabase SQL Editor 執行 `supabase-upgrade.sql`。
 
-## 第二階段：上傳 GitHub
+三語功能都在網站前端，不會建立三份資料，也不會改變既有紀錄。繁中、英文、日文介面共用同一個 `baoqie_recitations` 資料表。
 
-建議在 GitHub repository 首頁使用：
+## 上傳 GitHub
 
-`Add file` → `Upload files`
+1. 解壓縮 `baoqie-recite-v3.zip`。
+2. 打開 GitHub repository：`altolee/baoqie-recite`。
+3. 確認分支為 `main`。
+4. 點 `Add file` → `Upload files`。
+5. 將解壓縮資料夾裡面的八個檔案全部拖入上傳區，不要只上傳 ZIP。
+6. Commit message 填：`Add Traditional Chinese English and Japanese interfaces`。
+7. 選擇直接提交到 `main`，按 `Commit changes`。
 
-把以下檔案拖入上傳區：
+## Vercel
 
-- `index.html`
-- `styles.css`
-- `app.js`
-- `config.js`
-- `supabase.sql`
-- `supabase-upgrade.sql`
-- `README.md`
-- `DEPLOYMENT_GUIDE.md`
+GitHub 與 Vercel 已連接時，新的 main commit 會觸發部署。
 
-GitHub 會提示同名檔案將被覆蓋。提交訊息可填：
+1. 進入 Vercel 的 `baoqie-recite`。
+2. 打開 `Deployments`。
+3. 等最新部署顯示 `Ready` 與 `Production`。
+4. 打開正式網站並強制重新整理。
 
-`Upgrade Baoqie Recite with contact fields and public stats`
+## 驗收
 
-再按 `Commit changes`。
+首頁上方應出現：
 
-## 第三階段：確認 Vercel
+- `繁中`
+- `EN`
+- `日本語`
 
-1. 回到 Vercel 的 `baoqie-recite` 專案。
-2. 點 `Deployments`。
-3. 等待最新一筆部署顯示 `Ready`、`Production`。
-4. 打開正式網址並強制重新整理。
+逐一點擊確認：
 
-## 第四階段：測試
+- 標題、統計、表單、個資說明、回向偈、查詢與成功訊息會切換語言。
+- 切換語言不會清除表單中已輸入的資料。
+- 重新整理後會保留上次選擇的語言。
+- 三種語言登錄的資料都進入同一張 Supabase 資料表。
 
-1. 首頁應顯示三個數字：累計參與、累計念誦、登錄紀錄。
-2. 新增一筆測試紀錄。
-3. 到 Supabase `Table Editor` → `baoqie_recitations`。
-4. 確認新資料列的 `email`、`phone`、`contact_hash` 都有值。
-5. 用相同 Email 與電話測試「查詢紀錄」。
+## 快取
+
+本版使用 `styles.css?v=3`、`config.js?v=3`、`app.js?v=3`，用來降低瀏覽器讀取舊版檔案的機率。

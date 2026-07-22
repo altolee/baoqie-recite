@@ -8,14 +8,22 @@
   <title>寶篋印念誦｜Baoqie Recite</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+JP:wght@500;600;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body>
   <div class="page-glow glow-one" aria-hidden="true"></div>
   <div class="page-glow glow-two" aria-hidden="true"></div>
 
   <header class="hero">
+    <div class="language-row">
+      <div id="language-switcher" class="language-switcher" role="group" aria-label="語言切換" data-i18n-aria-label="languageSwitcherLabel">
+        <button type="button" data-language="zh-TW" aria-pressed="true">繁中</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+        <button type="button" data-language="ja" aria-pressed="false">日本語</button>
+      </div>
+    </div>
+
     <div class="hero-symbol" aria-hidden="true">
       <svg viewBox="0 0 100 100" role="img">
         <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/>
@@ -24,90 +32,90 @@
         <circle cx="50" cy="50" r="5" fill="currentColor"/>
       </svg>
     </div>
-    <p class="eyebrow">寶篋印念誦 · Baoqie Recite</p>
-    <h1>一切如來心秘密全身舍利<br />寶篋印陀羅尼</h1>
-    <p class="hero-copy">以恭敬心記錄每一次念誦，將清淨善念回向一切眾生。</p>
-    <div id="mode-badge" class="mode-badge">正在確認資料模式…</div>
+    <p class="eyebrow" data-i18n="brand">寶篋印念誦 · Baoqie Recite</p>
+    <h1><span data-i18n="titleLine1">一切如來心秘密全身舍利</span><br /><span data-i18n="titleLine2">寶篋印陀羅尼</span></h1>
+    <p class="hero-copy" data-i18n="heroCopy">以恭敬心記錄每一次念誦，將清淨善念回向一切眾生。</p>
+    <div id="mode-badge" class="mode-badge" data-i18n="modeChecking">正在確認資料模式…</div>
   </header>
 
   <main class="app-shell">
-    <section class="summary-card" aria-label="共同念誦統計">
+    <section class="summary-card" aria-label="共同念誦統計" data-i18n-aria-label="summaryAria">
       <div class="summary-stat">
-        <span>累計參與</span>
-        <div class="summary-value"><strong id="participant-total">0</strong><small>人</small></div>
+        <span data-i18n="participantLabel">累計參與</span>
+        <div class="summary-value"><strong id="participant-total">0</strong><small data-i18n="personUnit">人</small></div>
       </div>
       <div class="summary-stat">
-        <span>累計念誦</span>
-        <div class="summary-value"><strong id="all-total">0</strong><small>遍</small></div>
+        <span data-i18n="recitationLabel">累計念誦</span>
+        <div class="summary-value"><strong id="all-total">0</strong><small data-i18n="recitationUnit">遍</small></div>
       </div>
       <div class="summary-stat">
-        <span>登錄紀錄</span>
-        <div class="summary-value"><strong id="record-total">0</strong><small>筆</small></div>
+        <span data-i18n="recordLabel">登錄紀錄</span>
+        <div class="summary-value"><strong id="record-total">0</strong><small data-i18n="recordUnit">筆</small></div>
       </div>
-      <p class="summary-caption">每一次念誦，都是共同願行的一部分。</p>
+      <p class="summary-caption" data-i18n="summaryCaption">每一次念誦，都是共同願行的一部分。</p>
     </section>
 
-    <nav class="tabs" aria-label="主要功能">
-      <button class="tab active" type="button" data-tab="record" aria-selected="true">念誦登錄</button>
-      <button class="tab" type="button" data-tab="lookup" aria-selected="false">查詢紀錄</button>
+    <nav class="tabs" aria-label="主要功能" data-i18n-aria-label="mainNavAria">
+      <button class="tab active" type="button" data-tab="record" aria-selected="true" data-i18n="tabRecord">念誦登錄</button>
+      <button class="tab" type="button" data-tab="lookup" aria-selected="false" data-i18n="tabLookup">查詢紀錄</button>
     </nav>
 
     <section id="record-panel" class="panel active" aria-labelledby="record-title">
       <div class="section-heading">
-        <p class="section-kicker">Record</p>
-        <h2 id="record-title">登錄這一次的念誦</h2>
-        <p>請填寫基本資料與本次念誦次數。時間將自動記錄，也可自行調整。</p>
+        <p class="section-kicker" data-i18n="recordKicker">Record</p>
+        <h2 id="record-title" data-i18n="recordTitle">登錄這一次的念誦</h2>
+        <p data-i18n="recordIntro">請填寫基本資料與本次念誦次數。時間將自動記錄，也可自行調整。</p>
       </div>
 
       <form id="record-form" novalidate>
         <label class="field">
-          <span>姓名或稱呼</span>
-          <input id="name" name="name" type="text" maxlength="80" autocomplete="name" placeholder="例如：李○○" required />
+          <span data-i18n="nameLabel">姓名或稱呼</span>
+          <input id="name" name="name" type="text" maxlength="80" autocomplete="name" placeholder="例如：李○○" data-i18n-placeholder="namePlaceholder" required />
         </label>
 
         <div class="field">
-          <span>本次念誦次數</span>
-          <div class="quick-counts" aria-label="快速選擇念誦次數">
+          <span data-i18n="countLabel">本次念誦次數</span>
+          <div class="quick-counts" aria-label="快速選擇念誦次數" data-i18n-aria-label="quickCountAria">
             <button type="button" data-count="7">7 遍</button>
             <button type="button" data-count="21">21 遍</button>
             <button type="button" data-count="49">49 遍</button>
             <button type="button" data-count="108">108 遍</button>
           </div>
           <div class="count-input-wrap">
-            <button id="minus-count" class="count-step" type="button" aria-label="減少一次">−</button>
+            <button id="minus-count" class="count-step" type="button" aria-label="減少一次" data-i18n-aria-label="decreaseCount">−</button>
             <input id="count" name="count" type="number" inputmode="numeric" min="1" max="1000000" value="108" required />
-            <button id="plus-count" class="count-step" type="button" aria-label="增加一次">＋</button>
+            <button id="plus-count" class="count-step" type="button" aria-label="增加一次" data-i18n-aria-label="increaseCount">＋</button>
           </div>
         </div>
 
         <label class="field">
-          <span>Email</span>
-          <input id="email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="用於日後核對查詢" required />
+          <span data-i18n="emailLabel">Email</span>
+          <input id="email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="用於日後核對查詢" data-i18n-placeholder="emailPlaceholder" required />
         </label>
 
         <label class="field">
-          <span>電話</span>
-          <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" placeholder="例如：0912 345 678" required />
+          <span data-i18n="phoneLabel">電話</span>
+          <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" placeholder="例如：0912 345 678" data-i18n-placeholder="phonePlaceholder" required />
         </label>
 
         <label class="field">
-          <span>念誦時間</span>
+          <span data-i18n="timeLabel">念誦時間</span>
           <input id="recited-at" name="recitedAt" type="datetime-local" required />
         </label>
 
         <details class="privacy-note">
-          <summary>個人資料使用說明</summary>
-          <p>本平台蒐集姓名或稱呼、Email、電話、念誦次數及念誦時間，用於本人紀錄查詢、整體統計、資料備份及必要聯繫。Email 與電話將分別保存於受權限保護的資料庫，不會在公開頁面顯示；系統另以不可逆識別碼核對本人查詢。</p>
+          <summary data-i18n="privacySummary">個人資料使用說明</summary>
+          <p data-i18n="privacyText">本平台蒐集姓名或稱呼、Email、電話、念誦次數及念誦時間，用於本人紀錄查詢、整體統計、資料備份及必要聯繫。Email 與電話將分別保存於受權限保護的資料庫，不會在公開頁面顯示；系統另以不可逆識別碼核對本人查詢。</p>
         </details>
 
         <label class="consent-row">
           <input id="consent" type="checkbox" required />
-          <span>我已閱讀並同意上述資料使用方式，並了解可向平台管理者申請查詢、更正或刪除個人資料。</span>
+          <span data-i18n="consentText">我已閱讀並同意上述資料使用方式，並了解可向平台管理者申請查詢、更正或刪除個人資料。</span>
         </label>
 
         <button id="submit-button" class="primary-button" type="submit">
-          <span>登錄念誦</span>
-          <small>願以此功德，普及於一切</small>
+          <span data-i18n="submitLabel">登錄念誦</span>
+          <small data-i18n="submitSubtext">願以此功德，普及於一切</small>
         </button>
         <p id="record-message" class="form-message" role="status" aria-live="polite"></p>
       </form>
@@ -115,61 +123,61 @@
 
     <section id="lookup-panel" class="panel" aria-labelledby="lookup-title" hidden>
       <div class="section-heading">
-        <p class="section-kicker">History</p>
-        <h2 id="lookup-title">查詢我的念誦紀錄</h2>
-        <p>請輸入登錄時使用的 Email 與電話，兩者需同時相符，才能查看紀錄。</p>
+        <p class="section-kicker" data-i18n="lookupKicker">History</p>
+        <h2 id="lookup-title" data-i18n="lookupTitle">查詢我的念誦紀錄</h2>
+        <p data-i18n="lookupIntro">請輸入登錄時使用的 Email 與電話，兩者需同時相符，才能查看紀錄。</p>
       </div>
 
       <form id="lookup-form" novalidate>
         <label class="field">
-          <span>Email</span>
-          <input id="lookup-email" type="email" maxlength="254" autocomplete="email" placeholder="登錄時使用的 Email" required />
+          <span data-i18n="emailLabel">Email</span>
+          <input id="lookup-email" type="email" maxlength="254" autocomplete="email" placeholder="登錄時使用的 Email" data-i18n-placeholder="lookupEmailPlaceholder" required />
         </label>
         <label class="field">
-          <span>電話</span>
-          <input id="lookup-phone" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" placeholder="登錄時使用的電話" required />
+          <span data-i18n="phoneLabel">電話</span>
+          <input id="lookup-phone" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" placeholder="登錄時使用的電話" data-i18n-placeholder="lookupPhonePlaceholder" required />
         </label>
-        <button id="lookup-button" class="secondary-button" type="submit">查詢我的紀錄</button>
+        <button id="lookup-button" class="secondary-button" type="submit" data-i18n="lookupButton">查詢我的紀錄</button>
         <p id="lookup-message" class="form-message" role="status" aria-live="polite"></p>
       </form>
 
       <div id="lookup-result" class="lookup-result" hidden>
         <div class="result-summary">
-          <span>您的累積念誦</span>
+          <span data-i18n="personalTotalLabel">您的累積念誦</span>
           <strong id="personal-total">0</strong>
-          <small>遍</small>
+          <small data-i18n="recitationUnit">遍</small>
         </div>
         <div id="record-list" class="record-list"></div>
       </div>
     </section>
 
     <section class="dedication-card">
-      <span class="dedication-mark" aria-hidden="true">願</span>
+      <span class="dedication-mark" aria-hidden="true" data-i18n="dedicationMark">願</span>
       <div>
-        <h2>回向偈</h2>
-        <p>願以此功德，莊嚴佛淨土；上報四重恩，下濟三途苦。若有見聞者，悉發菩提心；盡此一報身，同生極樂國。</p>
+        <h2 data-i18n="dedicationTitle">回向偈</h2>
+        <p data-i18n="dedicationText">願以此功德，莊嚴佛淨土；上報四重恩，下濟三途苦。若有見聞者，悉發菩提心；盡此一報身，同生極樂國。</p>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>本平台僅作念誦紀錄，不代表寺院、法會或宗教團體認證。</p>
-    <p>Email 與電話不會在公開頁面顯示；完整資料僅供授權管理、備份與必要聯繫使用。</p>
+    <p data-i18n="footer1">本平台僅作念誦紀錄，不代表寺院、法會或宗教團體認證。</p>
+    <p data-i18n="footer2">Email 與電話不會在公開頁面顯示；完整資料僅供授權管理、備份與必要聯繫使用。</p>
   </footer>
 
   <div id="success-dialog" class="dialog" hidden>
     <div class="dialog-backdrop"></div>
     <section class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
       <div class="success-symbol" aria-hidden="true">✓</div>
-      <p class="section-kicker">已圓滿登錄</p>
-      <h2 id="success-title">感恩您的發心</h2>
+      <p class="section-kicker" data-i18n="dialogKicker">已圓滿登錄</p>
+      <h2 id="success-title" data-i18n="dialogTitle">感恩您的發心</h2>
       <p id="success-copy"></p>
-      <button id="close-dialog" class="primary-button compact" type="button">繼續念誦</button>
+      <button id="close-dialog" class="primary-button compact" type="button" data-i18n="continueButton">繼續念誦</button>
     </section>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js?v=2"></script>
-  <script src="app.js?v=2"></script>
+  <script src="config.js?v=3"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
