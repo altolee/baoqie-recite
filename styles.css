@@ -21,8 +21,8 @@ body {
   min-height: 100vh;
   color: var(--ink);
   background:
-    radial-gradient(circle at 15% 5%, rgba(200, 154, 66, .19), transparent 28rem),
-    linear-gradient(180deg, #6c1717 0 25rem, #f6ecda 25rem 100%);
+    radial-gradient(circle at 15% 5%, rgba(200, 154, 66, .16), transparent 28rem),
+    #f6ecda;
   font-family: "Noto Sans TC", "Noto Sans JP", system-ui, sans-serif;
   overflow-x: hidden;
 }
@@ -62,7 +62,7 @@ button { cursor: pointer; }
   border-radius: 999px;
   padding: 6px 11px;
   background: transparent;
-  color: rgba(255,248,232,.72);
+  color: rgba(255,248,232,.88);
   font-size: .76rem;
   font-weight: 700;
   white-space: nowrap;
@@ -101,17 +101,32 @@ html[lang="en"] .hero h1 {
 .hero {
   position: relative;
   z-index: 1;
+  isolation: isolate;
   width: min(760px, calc(100% - 36px));
   margin: 0 auto;
   padding: 44px 0 34px;
   color: #fff8e8;
   text-align: center;
 }
+
+/* 酒紅色背景跟著 Hero 實際高度延伸，避免英文、日文換行後落到淺色背景 */
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #681515 0%, #7f1d1d 72%, #741919 100%);
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
+}
 .hero-symbol { width: 78px; height: 78px; margin: 0 auto 14px; color: var(--gold-light); }
 .hero-symbol svg { width: 100%; height: 100%; }
 .eyebrow, .section-kicker {
   margin: 0 0 9px;
-  color: var(--gold-light);
+  color: #f1d28d;
   font-size: .76rem;
   font-weight: 700;
   letter-spacing: .24em;
@@ -119,6 +134,7 @@ html[lang="en"] .hero h1 {
 }
 .hero h1 {
   margin: 0;
+  text-shadow: 0 2px 5px rgba(43, 7, 7, .38);
   font-family: "Noto Serif TC", "Noto Serif JP", serif;
   font-size: clamp(1.55rem, 5vw, 2.6rem);
   line-height: 1.48;
@@ -128,22 +144,25 @@ html[lang="en"] .hero h1 {
 .hero-copy {
   max-width: 520px;
   margin: 17px auto 0;
-  color: rgba(255, 248, 232, .78);
+  color: rgba(255, 248, 232, .95);
+  font-weight: 500;
   line-height: 1.8;
+  text-shadow: 0 1px 2px rgba(45, 8, 8, .35);
 }
 .campaign-note {
   max-width: 620px;
   margin: 19px auto 0;
   padding: 15px 18px;
-  border: 1px solid rgba(234, 209, 154, .35);
+  border: 1px solid rgba(245, 216, 150, .58);
   border-radius: 18px;
-  background: rgba(255, 248, 232, .09);
+  background: rgba(55, 8, 8, .38);
   color: #fff8e8;
+  box-shadow: 0 12px 28px rgba(43, 7, 7, .18);
   text-align: left;
   backdrop-filter: blur(8px);
 }
-.campaign-note strong { display: block; color: var(--gold-light); font-family: "Noto Serif TC", "Noto Serif JP", serif; font-size: .94rem; line-height: 1.65; letter-spacing: .035em; }
-.campaign-note p { margin: 5px 0 0; color: rgba(255, 248, 232, .82); font-size: .84rem; line-height: 1.75; }
+.campaign-note strong { display: block; color: #f3d58f; font-family: "Noto Serif TC", "Noto Serif JP", serif; font-size: .94rem; font-weight: 700; line-height: 1.65; letter-spacing: .035em; text-shadow: 0 1px 2px rgba(40, 5, 5, .35); }
+.campaign-note p { margin: 5px 0 0; color: rgba(255, 250, 240, .96); font-size: .84rem; font-weight: 500; line-height: 1.75; }
 
 .mode-badge {
   display: inline-flex;
@@ -151,10 +170,10 @@ html[lang="en"] .hero h1 {
   gap: 7px;
   margin-top: 18px;
   padding: 7px 13px;
-  border: 1px solid rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.34);
   border-radius: 999px;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.8);
+  background: rgba(55, 8, 8, .34);
+  color: rgba(255,255,255,.96);
   font-size: .75rem;
   backdrop-filter: blur(8px);
 }
@@ -326,7 +345,11 @@ footer p { margin: 4px 0; }
 .dialog-card p:not(.section-kicker) { color: var(--muted); line-height: 1.7; }
 
 @media (max-width: 520px) {
-  body { background: linear-gradient(180deg, #6c1717 0 25rem, #f6ecda 25rem 100%); }
+  body {
+    background:
+      radial-gradient(circle at 15% 5%, rgba(200, 154, 66, .13), transparent 22rem),
+      #f6ecda;
+  }
   .hero { padding-top: 22px; }
   .language-row { justify-content: center; margin-bottom: 16px; }
   .language-switcher button { padding-left: 10px; padding-right: 10px; }
